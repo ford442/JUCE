@@ -1,22 +1,18 @@
 /*
   ==============================================================================
 
-   This file is part of the JUCE framework examples.
-   Copyright (c) Raw Material Software Limited
+   This file is part of the JUCE examples.
+   Copyright (c) 2020 - Raw Material Software Limited
 
    The code included in this file is provided under the terms of the ISC license
    http://www.isc.org/downloads/software-support-policy/isc-license. Permission
-   to use, copy, modify, and/or distribute this software for any purpose with or
+   To use, copy, modify, and/or distribute this software for any purpose with or
    without fee is hereby granted provided that the above copyright notice and
    this permission notice appear in all copies.
 
-   THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-   REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-   AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-   INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-   LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-   PERFORMANCE OF THIS SOFTWARE.
+   THE SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES,
+   WHETHER EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR
+   PURPOSE, ARE DISCLAIMED.
 
   ==============================================================================
 */
@@ -35,7 +31,7 @@
 
  dependencies:     juce_core, juce_data_structures, juce_events, juce_graphics,
                    juce_gui_basics, juce_gui_extra, juce_opengl
- exporters:        xcode_mac, vs2022, vs2026, xcode_iphone
+ exporters:        xcode_mac, vs2019, xcode_iphone
 
  moduleFlags:      JUCE_STRICT_REFCOUNTEDPOINTER=1
 
@@ -58,7 +54,7 @@
     This component lives inside our window, and this is where you should put all
     your controls and content.
 */
-class OpenGLAppDemo final : public OpenGLAppComponent
+class OpenGLAppDemo   : public OpenGLAppComponent
 {
 public:
     //==============================================================================
@@ -97,10 +93,10 @@ public:
 
     Matrix3D<float> getViewMatrix() const
     {
-        auto viewMatrix = Matrix3D<float>::fromTranslation ({ 0.0f, 0.0f, -10.0f });
-        auto rotationMatrix = viewMatrix.rotation ({ -0.3f, 5.0f * std::sin ((float) getFrameCounter() * 0.01f), 0.0f });
+        Matrix3D<float> viewMatrix ({ 0.0f, 0.0f, -10.0f });
+        Matrix3D<float> rotationMatrix = viewMatrix.rotation ({ -0.3f, 5.0f * std::sin ((float) getFrameCounter() * 0.01f), 0.0f });
 
-        return viewMatrix * rotationMatrix;
+        return rotationMatrix * viewMatrix;
     }
 
     void render() override
@@ -124,10 +120,10 @@ public:
 
         shader->use();
 
-        if (uniforms->projectionMatrix != nullptr)
+        if (uniforms->projectionMatrix.get() != nullptr)
             uniforms->projectionMatrix->setMatrix4 (getProjectionMatrix().mat, 1, false);
 
-        if (uniforms->viewMatrix != nullptr)
+        if (uniforms->viewMatrix.get() != nullptr)
             uniforms->viewMatrix->setMatrix4 (getViewMatrix().mat, 1, false);
 
         shape->draw (*attributes);
@@ -209,7 +205,7 @@ public:
             attributes.reset();
             uniforms  .reset();
 
-            shader = std::move (newShader);
+            shader.reset (newShader.release());
             shader->use();
 
             shape     .reset (new Shape());
@@ -280,10 +276,10 @@ private:
         {
             using namespace ::juce::gl;
 
-            if (position != nullptr)       glDisableVertexAttribArray (position->attributeID);
-            if (normal != nullptr)         glDisableVertexAttribArray (normal->attributeID);
-            if (sourceColour != nullptr)   glDisableVertexAttribArray (sourceColour->attributeID);
-            if (textureCoordIn != nullptr) glDisableVertexAttribArray (textureCoordIn->attributeID);
+            if (position.get() != nullptr)       glDisableVertexAttribArray (position->attributeID);
+            if (normal.get() != nullptr)         glDisableVertexAttribArray (normal->attributeID);
+            if (sourceColour.get() != nullptr)   glDisableVertexAttribArray (sourceColour->attributeID);
+            if (textureCoordIn.get() != nullptr) glDisableVertexAttribArray (textureCoordIn->attributeID);
         }
 
         std::unique_ptr<OpenGLShaderProgram::Attribute> position, normal, sourceColour, textureCoordIn;

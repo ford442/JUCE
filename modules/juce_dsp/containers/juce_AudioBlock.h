@@ -1,44 +1,37 @@
 /*
   ==============================================================================
 
-   This file is part of the JUCE framework.
-   Copyright (c) Raw Material Software Limited
+   This file is part of the JUCE library.
+   Copyright (c) 2020 - Raw Material Software Limited
 
-   JUCE is an open source framework subject to commercial or open source
+   JUCE is an open source library subject to commercial or open-source
    licensing.
 
-   By downloading, installing, or using the JUCE framework, or combining the
-   JUCE framework with any other source code, object code, content or any other
-   copyrightable work, you agree to the terms of the JUCE End User Licence
-   Agreement, and all incorporated terms including the JUCE Privacy Policy and
-   the JUCE Website Terms of Service, as applicable, which will bind you. If you
-   do not agree to the terms of these agreements, we will not license the JUCE
-   framework to you, and you must discontinue the installation or download
-   process and cease use of the JUCE framework.
+   By using JUCE, you agree to the terms of both the JUCE 6 End-User License
+   Agreement and JUCE Privacy Policy (both effective as of the 16th June 2020).
 
-   JUCE End User Licence Agreement: https://juce.com/legal/juce-8-licence/
-   JUCE Privacy Policy: https://juce.com/juce-privacy-policy
-   JUCE Website Terms of Service: https://juce.com/juce-website-terms-of-service/
+   End User License Agreement: www.juce.com/juce-6-licence
+   Privacy Policy: www.juce.com/juce-privacy-policy
 
-   Or:
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   You may also use this code under the terms of the AGPLv3:
-   https://www.gnu.org/licenses/agpl-3.0.en.html
-
-   THE JUCE FRAMEWORK IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL
-   WARRANTIES, WHETHER EXPRESSED OR IMPLIED, INCLUDING WARRANTY OF
-   MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
-namespace juce::dsp
+namespace juce
+{
+namespace dsp
 {
 
-/** @cond */
+#ifndef DOXYGEN
 namespace SampleTypeHelpers // Internal classes needed for handling sample type classes
 {
-    template <typename T, bool = std::is_floating_point_v<T>>
+    template <typename T, bool = std::is_floating_point<T>::value>
     struct ElementType
     {
         using Type = T;
@@ -56,7 +49,7 @@ namespace SampleTypeHelpers // Internal classes needed for handling sample type 
         using Type = typename T::value_type;
     };
 }
-/** @endcond */
+#endif
 
 //==============================================================================
 /**
@@ -78,10 +71,10 @@ class AudioBlock
 private:
     template <typename OtherSampleType>
     using MayUseConvertingConstructor =
-        std::enable_if_t<std::is_same_v<std::remove_const_t<SampleType>,
-                                        std::remove_const_t<OtherSampleType>>
-                             && std::is_const_v<SampleType>
-                             && ! std::is_const_v<OtherSampleType>,
+        std::enable_if_t<std::is_same<std::remove_const_t<SampleType>,
+                                      std::remove_const_t<OtherSampleType>>::value
+                             && std::is_const<SampleType>::value
+                             && ! std::is_const<OtherSampleType>::value,
                          int>;
 
 public:
@@ -344,7 +337,7 @@ public:
         SIMDRegister then incrementing dstPos by one will increase the sample position
         in the AudioBuffer's units by a factor of SIMDRegister<SampleType>::SIMDNumElements.
     */
-    void copyTo (AudioBuffer<std::remove_const_t<NumericType>>& dst, size_t srcPos = 0, size_t dstPos = 0,
+    void copyTo (AudioBuffer<typename std::remove_const<NumericType>::type>& dst, size_t srcPos = 0, size_t dstPos = 0,
                  size_t numElements = std::numeric_limits<size_t>::max()) const
     {
         auto dstlen = static_cast<size_t> (dst.getNumSamples()) / sizeFactor;
@@ -525,7 +518,7 @@ public:
 
     //==============================================================================
     /** Finds the minimum and maximum value of the buffer. */
-    Range<std::remove_const_t<NumericType>> findMinAndMax() const noexcept
+    Range<typename std::remove_const<NumericType>::type> findMinAndMax() const noexcept
     {
         if (numChannels == 0)
             return {};
@@ -566,11 +559,11 @@ public:
 
     //==============================================================================
     // This class can only be used with floating point types
-    static_assert (std::is_same_v<std::remove_const_t<SampleType>, float>
-                    || std::is_same_v<std::remove_const_t<SampleType>, double>
+    static_assert (std::is_same<std::remove_const_t<SampleType>, float>::value
+                    || std::is_same<std::remove_const_t<SampleType>, double>::value
                   #if JUCE_USE_SIMD
-                    || std::is_same_v<std::remove_const_t<SampleType>, SIMDRegister<float>>
-                    || std::is_same_v<std::remove_const_t<SampleType>, SIMDRegister<double>>
+                    || std::is_same<std::remove_const_t<SampleType>, SIMDRegister<float>>::value
+                    || std::is_same<std::remove_const_t<SampleType>, SIMDRegister<double>>::value
                   #endif
                    , "AudioBlock only supports single or double precision floating point types");
 
@@ -898,4 +891,5 @@ private:
     friend class AudioBlock;
 };
 
-} // namespace juce::dsp
+} // namespace dsp
+} // namespace juce

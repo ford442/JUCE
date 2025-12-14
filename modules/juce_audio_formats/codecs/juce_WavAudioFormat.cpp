@@ -1,39 +1,42 @@
 /*
   ==============================================================================
 
-   This file is part of the JUCE framework.
-   Copyright (c) Raw Material Software Limited
+   This file is part of the JUCE library.
+   Copyright (c) 2020 - Raw Material Software Limited
 
-   JUCE is an open source framework subject to commercial or open source
+   JUCE is an open source library subject to commercial or open-source
    licensing.
 
-   By downloading, installing, or using the JUCE framework, or combining the
-   JUCE framework with any other source code, object code, content or any other
-   copyrightable work, you agree to the terms of the JUCE End User Licence
-   Agreement, and all incorporated terms including the JUCE Privacy Policy and
-   the JUCE Website Terms of Service, as applicable, which will bind you. If you
-   do not agree to the terms of these agreements, we will not license the JUCE
-   framework to you, and you must discontinue the installation or download
-   process and cease use of the JUCE framework.
+   By using JUCE, you agree to the terms of both the JUCE 6 End-User License
+   Agreement and JUCE Privacy Policy (both effective as of the 16th June 2020).
 
-   JUCE End User Licence Agreement: https://juce.com/legal/juce-8-licence/
-   JUCE Privacy Policy: https://juce.com/juce-privacy-policy
-   JUCE Website Terms of Service: https://juce.com/juce-website-terms-of-service/
+   End User License Agreement: www.juce.com/juce-6-licence
+   Privacy Policy: www.juce.com/juce-privacy-policy
 
-   Or:
+   Or: You may also use this code under the terms of the GPL v3 (see
+   www.gnu.org/licenses).
 
-   You may also use this code under the terms of the AGPLv3:
-   https://www.gnu.org/licenses/agpl-3.0.en.html
-
-   THE JUCE FRAMEWORK IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL
-   WARRANTIES, WHETHER EXPRESSED OR IMPLIED, INCLUDING WARRANTY OF
-   MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED.
+   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
+   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
+   DISCLAIMED.
 
   ==============================================================================
 */
 
 namespace juce
 {
+
+using StringMap = std::unordered_map<String, String>;
+
+static auto toMap (const StringPairArray& array)
+{
+    StringMap result;
+
+    for (auto i = 0; i < array.size(); ++i)
+        result[array.getAllKeys()[i]] = array.getAllValues()[i];
+
+    return result;
+}
 
 static auto getValueWithDefault (const StringMap& m, const String& key, const String& fallback = {})
 {
@@ -164,91 +167,6 @@ const char* const WavAudioFormat::riffInfoVersion               = "TVER";
 const char* const WavAudioFormat::riffInfoWatermarkURL          = "IWMU";
 const char* const WavAudioFormat::riffInfoWrittenBy             = "IWRI";
 const char* const WavAudioFormat::riffInfoYear                  = "YEAR";
-
-const char* const WavAudioFormat::aswgContentType               = "contentType";
-const char* const WavAudioFormat::aswgProject                   = "project";
-const char* const WavAudioFormat::aswgOriginator                = "originator";
-const char* const WavAudioFormat::aswgOriginatorStudio          = "originatorStudio";
-const char* const WavAudioFormat::aswgNotes                     = "notes";
-const char* const WavAudioFormat::aswgSession                   = "session";
-const char* const WavAudioFormat::aswgState                     = "state";
-const char* const WavAudioFormat::aswgEditor                    = "editor";
-const char* const WavAudioFormat::aswgMixer                     = "mixer";
-const char* const WavAudioFormat::aswgFxChainName               = "fxChainName";
-const char* const WavAudioFormat::aswgChannelConfig             = "channelConfig";
-const char* const WavAudioFormat::aswgAmbisonicFormat           = "ambisonicFormat";
-const char* const WavAudioFormat::aswgAmbisonicChnOrder         = "ambisonicChnOrder";
-const char* const WavAudioFormat::aswgAmbisonicNorm             = "ambisonicNorm";
-const char* const WavAudioFormat::aswgMicType                   = "micType";
-const char* const WavAudioFormat::aswgMicConfig                 = "micConfig";
-const char* const WavAudioFormat::aswgMicDistance               = "micDistance";
-const char* const WavAudioFormat::aswgRecordingLoc              = "recordingLoc";
-const char* const WavAudioFormat::aswgIsDesigned                = "isDesigned";
-const char* const WavAudioFormat::aswgRecEngineer               = "recEngineer";
-const char* const WavAudioFormat::aswgRecStudio                 = "recStudio";
-const char* const WavAudioFormat::aswgImpulseLocation           = "impulseLocation";
-const char* const WavAudioFormat::aswgCategory                  = "category";
-const char* const WavAudioFormat::aswgSubCategory               = "subCategory";
-const char* const WavAudioFormat::aswgCatId                     = "catId";
-const char* const WavAudioFormat::aswgUserCategory              = "userCategory";
-const char* const WavAudioFormat::aswgUserData                  = "userData";
-const char* const WavAudioFormat::aswgVendorCategory            = "vendorCategory";
-const char* const WavAudioFormat::aswgFxName                    = "fxName";
-const char* const WavAudioFormat::aswgLibrary                   = "library";
-const char* const WavAudioFormat::aswgCreatorId                 = "creatorId";
-const char* const WavAudioFormat::aswgSourceId                  = "sourceId";
-const char* const WavAudioFormat::aswgRmsPower                  = "rmsPower";
-const char* const WavAudioFormat::aswgLoudness                  = "loudness";
-const char* const WavAudioFormat::aswgLoudnessRange             = "loudnessRange";
-const char* const WavAudioFormat::aswgMaxPeak                   = "maxPeak";
-const char* const WavAudioFormat::aswgSpecDensity               = "specDensity";
-const char* const WavAudioFormat::aswgZeroCrossRate             = "zeroCrossRate";
-const char* const WavAudioFormat::aswgPapr                      = "papr";
-const char* const WavAudioFormat::aswgText                      = "text";
-const char* const WavAudioFormat::aswgEfforts                   = "efforts";
-const char* const WavAudioFormat::aswgEffortType                = "effortType";
-const char* const WavAudioFormat::aswgProjection                = "projection";
-const char* const WavAudioFormat::aswgLanguage                  = "language";
-const char* const WavAudioFormat::aswgTimingRestriction         = "timingRestriction";
-const char* const WavAudioFormat::aswgCharacterName             = "characterName";
-const char* const WavAudioFormat::aswgCharacterGender           = "characterGender";
-const char* const WavAudioFormat::aswgCharacterAge              = "characterAge";
-const char* const WavAudioFormat::aswgCharacterRole             = "characterRole";
-const char* const WavAudioFormat::aswgActorName                 = "actorName";
-const char* const WavAudioFormat::aswgActorGender               = "actorGender";
-const char* const WavAudioFormat::aswgDirector                  = "director";
-const char* const WavAudioFormat::aswgDirection                 = "direction";
-const char* const WavAudioFormat::aswgFxUsed                    = "fxUsed";
-const char* const WavAudioFormat::aswgUsageRights               = "usageRights";
-const char* const WavAudioFormat::aswgIsUnion                   = "isUnion";
-const char* const WavAudioFormat::aswgAccent                    = "accent";
-const char* const WavAudioFormat::aswgEmotion                   = "emotion";
-const char* const WavAudioFormat::aswgComposor                  = "composor";
-const char* const WavAudioFormat::aswgArtist                    = "artist";
-const char* const WavAudioFormat::aswgSongTitle                 = "songTitle";
-const char* const WavAudioFormat::aswgGenre                     = "genre";
-const char* const WavAudioFormat::aswgSubGenre                  = "subGenre";
-const char* const WavAudioFormat::aswgProducer                  = "producer";
-const char* const WavAudioFormat::aswgMusicSup                  = "musicSup";
-const char* const WavAudioFormat::aswgInstrument                = "instrument";
-const char* const WavAudioFormat::aswgMusicPublisher            = "musicPublisher";
-const char* const WavAudioFormat::aswgRightsOwner               = "rightsOwner";
-const char* const WavAudioFormat::aswgIsSource                  = "isSource";
-const char* const WavAudioFormat::aswgIsLoop                    = "isLoop";
-const char* const WavAudioFormat::aswgIntensity                 = "intensity";
-const char* const WavAudioFormat::aswgIsFinal                   = "isFinal";
-const char* const WavAudioFormat::aswgOrderRef                  = "orderRef";
-const char* const WavAudioFormat::aswgIsOst                     = "isOst";
-const char* const WavAudioFormat::aswgIsCinematic               = "isCinematic";
-const char* const WavAudioFormat::aswgIsLicensed                = "isLicensed";
-const char* const WavAudioFormat::aswgIsDiegetic                = "isDiegetic";
-const char* const WavAudioFormat::aswgMusicVersion              = "musicVersion";
-const char* const WavAudioFormat::aswgIsrcId                    = "isrcId";
-const char* const WavAudioFormat::aswgTempo                     = "tempo";
-const char* const WavAudioFormat::aswgTimeSig                   = "timeSig";
-const char* const WavAudioFormat::aswgInKey                     = "inKey";
-const char* const WavAudioFormat::aswgBillingCode               = "billingCode";
-const char* const WavAudioFormat::aswgVersion                   = "IXML_VERSION";
 
 const char* const WavAudioFormat::ISRC                                  = "ISRC";
 const char* const WavAudioFormat::internationalStandardRecordingCode    = "international standard recording code";
@@ -788,10 +706,6 @@ namespace WavFileHelpers
                         {
                             MemoryBlock mb;
                             input.readIntoMemoryBlock (mb, (ssize_t) infoLength);
-
-                            if (infoLength & 1)
-                                input.skipNextBytes (1);
-
                             values[type] = String::createStringFromData ((const char*) mb.getData(),
                                                                          (int) mb.getSize());
                             break;
@@ -950,157 +864,6 @@ namespace WavFileHelpers
     };
 
     //==============================================================================
-    namespace IXMLChunk
-    {
-        static const std::unordered_set<String> aswgMetadataKeys
-        {
-            WavAudioFormat::aswgContentType,
-            WavAudioFormat::aswgProject,
-            WavAudioFormat::aswgOriginator,
-            WavAudioFormat::aswgOriginatorStudio,
-            WavAudioFormat::aswgNotes,
-            WavAudioFormat::aswgSession,
-            WavAudioFormat::aswgState,
-            WavAudioFormat::aswgEditor,
-            WavAudioFormat::aswgMixer,
-            WavAudioFormat::aswgFxChainName,
-            WavAudioFormat::aswgChannelConfig,
-            WavAudioFormat::aswgAmbisonicFormat,
-            WavAudioFormat::aswgAmbisonicChnOrder,
-            WavAudioFormat::aswgAmbisonicNorm,
-            WavAudioFormat::aswgMicType,
-            WavAudioFormat::aswgMicConfig,
-            WavAudioFormat::aswgMicDistance,
-            WavAudioFormat::aswgRecordingLoc,
-            WavAudioFormat::aswgIsDesigned,
-            WavAudioFormat::aswgRecEngineer,
-            WavAudioFormat::aswgRecStudio,
-            WavAudioFormat::aswgImpulseLocation,
-            WavAudioFormat::aswgCategory,
-            WavAudioFormat::aswgSubCategory,
-            WavAudioFormat::aswgCatId,
-            WavAudioFormat::aswgUserCategory,
-            WavAudioFormat::aswgUserData,
-            WavAudioFormat::aswgVendorCategory,
-            WavAudioFormat::aswgFxName,
-            WavAudioFormat::aswgLibrary,
-            WavAudioFormat::aswgCreatorId,
-            WavAudioFormat::aswgSourceId,
-            WavAudioFormat::aswgRmsPower,
-            WavAudioFormat::aswgLoudness,
-            WavAudioFormat::aswgLoudnessRange,
-            WavAudioFormat::aswgMaxPeak,
-            WavAudioFormat::aswgSpecDensity,
-            WavAudioFormat::aswgZeroCrossRate,
-            WavAudioFormat::aswgPapr,
-            WavAudioFormat::aswgText,
-            WavAudioFormat::aswgEfforts,
-            WavAudioFormat::aswgEffortType,
-            WavAudioFormat::aswgProjection,
-            WavAudioFormat::aswgLanguage,
-            WavAudioFormat::aswgTimingRestriction,
-            WavAudioFormat::aswgCharacterName,
-            WavAudioFormat::aswgCharacterGender,
-            WavAudioFormat::aswgCharacterAge,
-            WavAudioFormat::aswgCharacterRole,
-            WavAudioFormat::aswgActorName,
-            WavAudioFormat::aswgActorGender,
-            WavAudioFormat::aswgDirector,
-            WavAudioFormat::aswgDirection,
-            WavAudioFormat::aswgFxUsed,
-            WavAudioFormat::aswgUsageRights,
-            WavAudioFormat::aswgIsUnion,
-            WavAudioFormat::aswgAccent,
-            WavAudioFormat::aswgEmotion,
-            WavAudioFormat::aswgComposor,
-            WavAudioFormat::aswgArtist,
-            WavAudioFormat::aswgSongTitle,
-            WavAudioFormat::aswgGenre,
-            WavAudioFormat::aswgSubGenre,
-            WavAudioFormat::aswgProducer,
-            WavAudioFormat::aswgMusicSup,
-            WavAudioFormat::aswgInstrument,
-            WavAudioFormat::aswgMusicPublisher,
-            WavAudioFormat::aswgRightsOwner,
-            WavAudioFormat::aswgIsSource,
-            WavAudioFormat::aswgIsLoop,
-            WavAudioFormat::aswgIntensity,
-            WavAudioFormat::aswgIsFinal,
-            WavAudioFormat::aswgOrderRef,
-            WavAudioFormat::aswgIsOst,
-            WavAudioFormat::aswgIsCinematic,
-            WavAudioFormat::aswgIsLicensed,
-            WavAudioFormat::aswgIsDiegetic,
-            WavAudioFormat::aswgMusicVersion,
-            WavAudioFormat::aswgIsrcId,
-            WavAudioFormat::aswgTempo,
-            WavAudioFormat::aswgTimeSig,
-            WavAudioFormat::aswgInKey,
-            WavAudioFormat::aswgBillingCode
-        };
-
-        static void addToMetadata (StringMap& destValues, const String& source)
-        {
-            if (auto xml = parseXML (source))
-            {
-                if (xml->hasTagName ("BWFXML"))
-                {
-                    if (const auto* entry = xml->getChildByName (WavAudioFormat::aswgVersion))
-                        destValues[WavAudioFormat::aswgVersion] = entry->getAllSubText();
-
-                    if (const auto* aswgElement = xml->getChildByName ("ASWG"))
-                    {
-                        for (const auto* entry : aswgElement->getChildIterator())
-                        {
-                            const auto& tag = entry->getTagName();
-
-                            if (aswgMetadataKeys.find (tag) != aswgMetadataKeys.end())
-                                destValues[tag] = entry->getAllSubText();
-                        }
-                    }
-                }
-            }
-        }
-
-        static MemoryBlock createFrom (const StringMap& values)
-        {
-            auto createTextElement = [] (const StringRef& key, const StringRef& value)
-            {
-                auto* elem = new XmlElement (key);
-                elem->addTextElement (value);
-                return elem;
-            };
-
-            std::unique_ptr<XmlElement> aswgElement;
-
-            for (const auto& pair : values)
-            {
-                if (aswgMetadataKeys.find (pair.first) != aswgMetadataKeys.end())
-                {
-                    if (aswgElement == nullptr)
-                        aswgElement = std::make_unique<XmlElement> ("ASWG");
-
-                    aswgElement->addChildElement (createTextElement (pair.first, pair.second));
-                }
-            }
-
-            MemoryOutputStream outputStream;
-
-            if (aswgElement != nullptr)
-            {
-                XmlElement xml ("BWFXML");
-                auto aswgVersion = getValueWithDefault (values, WavAudioFormat::aswgVersion, "3.01");
-                xml.addChildElement (createTextElement (WavAudioFormat::aswgVersion, aswgVersion));
-                xml.addChildElement (aswgElement.release());
-                xml.writeTo (outputStream);
-                outputStream.writeRepeatedByte (0, outputStream.getDataSize());
-            }
-
-            return outputStream.getMemoryBlock();
-        }
-    }
-
-    //==============================================================================
     namespace AXMLChunk
     {
         static void addToMetadata (StringMap& destValues, const String& source)
@@ -1205,7 +968,7 @@ namespace WavFileHelpers
 }
 
 //==============================================================================
-class WavAudioFormatReader final : public AudioFormatReader
+class WavAudioFormatReader  : public AudioFormatReader
 {
 public:
     WavAudioFormatReader (InputStream* in)  : AudioFormatReader (in, wavFormatName)
@@ -1265,18 +1028,16 @@ public:
                     // read the format chunk
                     auto format = (unsigned short) input->readShort();
                     numChannels = (unsigned int) input->readShort();
-                    const auto intSampleRate = (uint32_t) input->readInt();
-                    sampleRate = intSampleRate;
-                    auto bytesPerSec = (uint32_t) input->readInt();
+                    sampleRate = input->readInt();
+                    auto bytesPerSec = input->readInt();
                     input->skipNextBytes (2);
                     bitsPerSample = (unsigned int) (int) input->readShort();
 
-                    if (bitsPerSample > 64 && intSampleRate > 0)
+                    if (bitsPerSample > 64 && (int) sampleRate != 0)
                     {
-                        bytesPerFrame = (int) (bytesPerSec / intSampleRate);
-                        jassert (bytesPerFrame >= 0);
+                        bytesPerFrame = bytesPerSec / (int) sampleRate;
 
-                        if (numChannels > 0)
+                        if (numChannels != 0)
                             bitsPerSample = 8 * (unsigned int) bytesPerFrame / numChannels;
                     }
                     else
@@ -1382,12 +1143,6 @@ public:
                     input->readIntoMemoryBlock (axml, (ssize_t) length);
                     AXMLChunk::addToMetadata (dict, axml.toString());
                 }
-                else if (chunkType == chunkName ("iXML"))
-                {
-                    MemoryBlock ixml;
-                    input->readIntoMemoryBlock (ixml, (ssize_t) length);
-                    IXMLChunk::addToMetadata (dict, ixml.toString());
-                }
                 else if (chunkType == chunkName ("LIST"))
                 {
                     auto subChunkType = input->readInt();
@@ -1479,7 +1234,7 @@ public:
     }
 
     //==============================================================================
-    bool readSamples (int* const* destSamples, int numDestChannels, int startOffsetInDestBuffer,
+    bool readSamples (int** destSamples, int numDestChannels, int startOffsetInDestBuffer,
                       int64 startSampleInFile, int numSamples) override
     {
         clearSamplesBeyondAvailableLength (destSamples, numDestChannels, startOffsetInDestBuffer,
@@ -1582,41 +1337,34 @@ private:
 };
 
 //==============================================================================
-class WavAudioFormatWriter final : public AudioFormatWriter
+class WavAudioFormatWriter  : public AudioFormatWriter
 {
 public:
     WavAudioFormatWriter (OutputStream* const out, const double rate,
                           const AudioChannelSet& channelLayoutToUse, const unsigned int bits,
-                          const StringMap& metadataValues,
-                          AudioFormatWriterOptions::SampleFormat sampleFormat)
+                          const StringPairArray& metadataValues)
         : AudioFormatWriter (out, wavFormatName, rate, channelLayoutToUse, bits)
     {
         using namespace WavFileHelpers;
-        using SampleFormat = AudioFormatWriterOptions::SampleFormat;
 
-        // The floating point format is only supported with a bit depth of 32
-        jassert (sampleFormat != SampleFormat::floatingPoint || bits == 32);
-
-        usesFloatingPointData = bits == 32 && sampleFormat != SampleFormat::integral;
-
-        if (! metadataValues.empty())
+        if (metadataValues.size() > 0)
         {
             // The meta data should have been sanitised for the WAV format.
             // If it was originally sourced from an AIFF file the MetaDataSource
             // key should be removed (or set to "WAV") once this has been done
-            jassert (metadataValues.count ("MetaDataSource") == 0
-                     || metadataValues.at ("MetaDataSource") != "AIFF");
+            jassert (metadataValues.getValue ("MetaDataSource", "None") != "AIFF");
 
-            bwavChunk     = BWAVChunk::createFrom (metadataValues);
-            ixmlChunk     = IXMLChunk::createFrom (metadataValues);
-            axmlChunk     = AXMLChunk::createFrom (metadataValues);
-            smplChunk     = SMPLChunk::createFrom (metadataValues);
-            instChunk     = InstChunk::createFrom (metadataValues);
-            cueChunk      = CueChunk ::createFrom (metadataValues);
-            listChunk     = ListChunk::createFrom (metadataValues);
-            listInfoChunk = ListInfoChunk::createFrom (metadataValues);
-            acidChunk     = AcidChunk::createFrom (metadataValues);
-            trckChunk     = TracktionChunk::createFrom (metadataValues);
+            const auto map = toMap (metadataValues);
+
+            bwavChunk     = BWAVChunk::createFrom (map);
+            axmlChunk     = AXMLChunk::createFrom (map);
+            smplChunk     = SMPLChunk::createFrom (map);
+            instChunk     = InstChunk::createFrom (map);
+            cueChunk      = CueChunk ::createFrom (map);
+            listChunk     = ListChunk::createFrom (map);
+            listInfoChunk = ListInfoChunk::createFrom (map);
+            acidChunk     = AcidChunk::createFrom (map);
+            trckChunk     = TracktionChunk::createFrom (map);
         }
 
         headerPosition = out->getPosition();
@@ -1651,9 +1399,9 @@ public:
 
         if (! output->write (tempBlock.getData(), bytes))
         {
-            // Failed to write to disk, so let's try writing the header.
+            // failed to write to disk, so let's try writing the header.
             // If it's just run out of disk space, then if it does manage
-            // to write the header, we'll still have a usable file.
+            // to write the header, we'll still have a usable file..
             writeHeader();
             writeFailed = true;
             return false;
@@ -1679,7 +1427,7 @@ public:
     }
 
 private:
-    MemoryBlock tempBlock, bwavChunk, ixmlChunk, axmlChunk, smplChunk, instChunk, cueChunk, listChunk, listInfoChunk, acidChunk, trckChunk;
+    MemoryBlock tempBlock, bwavChunk, axmlChunk, smplChunk, instChunk, cueChunk, listChunk, listInfoChunk, acidChunk, trckChunk;
     uint64 lengthInSamples = 0, bytesWritten = 0;
     int64 headerPosition = 0;
     bool writeFailed = false;
@@ -1709,7 +1457,6 @@ private:
         int64 riffChunkSize = (int64) (4 /* 'RIFF' */ + 8 + 40 /* WAVEFORMATEX */
                                        + 8 + audioDataSize + (audioDataSize & 1)
                                        + chunkSize (bwavChunk)
-                                       + chunkSize (ixmlChunk)
                                        + chunkSize (axmlChunk)
                                        + chunkSize (smplChunk)
                                        + chunkSize (instChunk)
@@ -1767,12 +1514,8 @@ private:
         else
         {
             writeChunkHeader (chunkName ("fmt "), 16);
-
-            constexpr short waveFormatIeeeFloat = 3;
-            constexpr short waveFormatPcm = 1;
-
-            output->writeShort (usesFloatingPointData ? waveFormatIeeeFloat
-                                                      : waveFormatPcm);
+            output->writeShort (bitsPerSample < 32 ? (short) 1 /*WAVE_FORMAT_PCM*/
+                                                   : (short) 3 /*WAVE_FORMAT_IEEE_FLOAT*/);
         }
 
         output->writeShort ((short) numChannels);
@@ -1787,7 +1530,7 @@ private:
             output->writeShort ((short) bitsPerSample); // wValidBitsPerSample
             output->writeInt (channelMask);
 
-            const ExtensibleWavSubFormat& subFormat = usesFloatingPointData ? IEEEFloatFormat : pcmFormat;
+            const ExtensibleWavSubFormat& subFormat = bitsPerSample < 32 ? pcmFormat : IEEEFloatFormat;
 
             output->writeInt ((int) subFormat.data1);
             output->writeShort ((short) subFormat.data2);
@@ -1796,7 +1539,6 @@ private:
         }
 
         writeChunk (bwavChunk,     chunkName ("bext"));
-        writeChunk (ixmlChunk,     chunkName ("iXML"));
         writeChunk (axmlChunk,     chunkName ("axml"));
         writeChunk (smplChunk,     chunkName ("smpl"));
         writeChunk (instChunk,     chunkName ("inst"), 7);
@@ -1807,6 +1549,8 @@ private:
         writeChunk (trckChunk,     chunkName ("Trkn"));
 
         writeChunkHeader (chunkName ("data"), isRF64 ? -1 : (int) (lengthInSamples * bytesPerFrame));
+
+        usesFloatingPointData = (bitsPerSample == 32);
     }
 
     static size_t chunkSize (const MemoryBlock& data) noexcept     { return data.isEmpty() ? 0 : (8 + data.getSize()); }
@@ -1854,7 +1598,7 @@ private:
 };
 
 //==============================================================================
-class MemoryMappedWavReader final : public MemoryMappedAudioFormatReader
+class MemoryMappedWavReader   : public MemoryMappedAudioFormatReader
 {
 public:
     MemoryMappedWavReader (const File& wavFile, const WavAudioFormatReader& reader)
@@ -1863,14 +1607,11 @@ public:
     {
     }
 
-    bool readSamples (int* const* destSamples, int numDestChannels, int startOffsetInDestBuffer,
+    bool readSamples (int** destSamples, int numDestChannels, int startOffsetInDestBuffer,
                       int64 startSampleInFile, int numSamples) override
     {
         clearSamplesBeyondAvailableLength (destSamples, numDestChannels, startOffsetInDestBuffer,
                                            startSampleInFile, numSamples, lengthInSamples);
-
-        if (numSamples <= 0)
-            return true;
 
         if (map == nullptr || ! mappedSection.contains (Range<int64> (startSampleInFile, startSampleInFile + numSamples)))
         {
@@ -1890,7 +1631,7 @@ public:
 
         if (map == nullptr || ! mappedSection.contains (sample))
         {
-            jassertfalse; // you must make sure that the window contains all the samples you're going to attempt to read
+            jassertfalse; // you must make sure that the window contains all the samples you're going to attempt to read.
 
             zeromem (result, (size_t) num * sizeof (float));
             return;
@@ -1917,7 +1658,7 @@ public:
 
         if (map == nullptr || numSamples <= 0 || ! mappedSection.contains (Range<int64> (startSampleInFile, startSampleInFile + numSamples)))
         {
-            jassert (numSamples <= 0); // you must make sure that the window contains all the samples you're going to attempt to read
+            jassert (numSamples <= 0); // you must make sure that the window contains all the samples you're going to attempt to read.
 
             for (int i = 0; i < numChannelsToRead; ++i)
                 results[i] = {};
@@ -2023,52 +1764,61 @@ MemoryMappedAudioFormatReader* WavAudioFormat::createMemoryMappedReader (FileInp
     return nullptr;
 }
 
-std::unique_ptr<AudioFormatWriter> WavAudioFormat::createWriterFor (std::unique_ptr<OutputStream>& streamToWriteTo,
-                                                                    const AudioFormatWriterOptions& options)
+AudioFormatWriter* WavAudioFormat::createWriterFor (OutputStream* out, double sampleRate,
+                                                    unsigned int numChannels, int bitsPerSample,
+                                                    const StringPairArray& metadataValues, int qualityOptionIndex)
 {
-    if (streamToWriteTo == nullptr || ! getPossibleBitDepths().contains (options.getBitsPerSample()))
-        return nullptr;
+    return createWriterFor (out, sampleRate, WavFileHelpers::canonicalWavChannelSet (static_cast<int> (numChannels)),
+                            bitsPerSample, metadataValues, qualityOptionIndex);
+}
 
-    const auto layout = options.getChannelLayout().value_or (WavFileHelpers::canonicalWavChannelSet (options.getNumChannels()));
+AudioFormatWriter* WavAudioFormat::createWriterFor (OutputStream* out,
+                                                    double sampleRate,
+                                                    const AudioChannelSet& channelLayout,
+                                                    int bitsPerSample,
+                                                    const StringPairArray& metadataValues,
+                                                    int /*qualityOptionIndex*/)
+{
+    if (out != nullptr && getPossibleBitDepths().contains (bitsPerSample) && isChannelLayoutSupported (channelLayout))
+        return new WavAudioFormatWriter (out, sampleRate, channelLayout,
+                                         (unsigned int) bitsPerSample, metadataValues);
 
-    if (! isChannelLayoutSupported (layout))
-        return nullptr;
-
-    return std::make_unique<WavAudioFormatWriter> (std::exchange (streamToWriteTo, {}).release(),
-                                                   options.getSampleRate(),
-                                                   layout,
-                                                   (unsigned int) options.getBitsPerSample(),
-                                                   options.getMetadataValues(),
-                                                   options.getSampleFormat());
+    return nullptr;
 }
 
 namespace WavFileHelpers
 {
-    static bool slowCopyWavFileWithNewMetadata (const File& file, const StringMap& metadata)
+    static bool slowCopyWavFileWithNewMetadata (const File& file, const StringPairArray& metadata)
     {
         TemporaryFile tempFile (file);
         WavAudioFormat wav;
 
         std::unique_ptr<AudioFormatReader> reader (wav.createReaderFor (file.createInputStream().release(), true));
 
-        if (reader == nullptr)
-            return false;
+        if (reader != nullptr)
+        {
+            std::unique_ptr<OutputStream> outStream (tempFile.getFile().createOutputStream());
 
-        std::unique_ptr<OutputStream> stream = tempFile.getFile().createOutputStream();
-        auto writer = wav.createWriterFor (stream,
-                                           AudioFormatWriter::Options{}.withSampleRate (reader->sampleRate)
-                                                                       .withNumChannels ((int) reader->numChannels)
-                                                                       .withBitsPerSample ((int) reader->bitsPerSample)
-                                                                       .withMetadataValues (metadata));
+            if (outStream != nullptr)
+            {
+                std::unique_ptr<AudioFormatWriter> writer (wav.createWriterFor (outStream.get(), reader->sampleRate,
+                                                                                reader->numChannels, (int) reader->bitsPerSample,
+                                                                                metadata, 0));
 
-        if (writer == nullptr)
-            return false;
+                if (writer != nullptr)
+                {
+                    outStream.release();
 
-        bool ok = writer->writeFromAudioReader (*reader, 0, -1);
-        writer.reset();
-        reader.reset();
+                    bool ok = writer->writeFromAudioReader (*reader, 0, -1);
+                    writer.reset();
+                    reader.reset();
 
-        return ok && tempFile.overwriteTargetFileWithTemporary();
+                    return ok && tempFile.overwriteTargetFileWithTemporary();
+                }
+            }
+        }
+
+        return false;
     }
 }
 
@@ -2090,7 +1840,7 @@ bool WavAudioFormat::replaceMetadataInFile (const File& wavFile, const StringPai
 
             if (chunk.getSize() <= (size_t) bwavSize)
             {
-                // the new one will fit in the space available, so write it directly
+                // the new one will fit in the space available, so write it directly..
                 auto oldSize = wavFile.getSize();
 
                 {
@@ -2110,7 +1860,7 @@ bool WavAudioFormat::replaceMetadataInFile (const File& wavFile, const StringPai
         }
     }
 
-    return slowCopyWavFileWithNewMetadata (wavFile, toMap (newMetadata));
+    return slowCopyWavFileWithNewMetadata (wavFile, newMetadata);
 }
 
 
@@ -2118,7 +1868,7 @@ bool WavAudioFormat::replaceMetadataInFile (const File& wavFile, const StringPai
 //==============================================================================
 #if JUCE_UNIT_TESTS
 
-struct WaveAudioFormatTests final : public UnitTest
+struct WaveAudioFormatTests : public UnitTest
 {
     WaveAudioFormatTests()
         : UnitTest ("Wave audio format tests", UnitTestCategories::audio)
@@ -2138,11 +1888,7 @@ struct WaveAudioFormatTests final : public UnitTest
         for (int i = numElementsInArray (WavFileHelpers::ListInfoChunk::types); --i >= 0;)
             metadataValues[WavFileHelpers::ListInfoChunk::types[i]] = WavFileHelpers::ListInfoChunk::types[i];
 
-        const String prefixCode { "AA6Q7" }; // two letters followed by three alphanumeric characters
-        const String yearOfReference { "20" }; // two digits, 20 meaning the year 2020
-        const String designationCode { "00047" }; // five digits
-
-        metadataValues[WavAudioFormat::internationalStandardRecordingCode] = prefixCode + yearOfReference + designationCode;;
+        metadataValues[WavAudioFormat::internationalStandardRecordingCode] = WavAudioFormat::internationalStandardRecordingCode;
 
         if (metadataValues.size() > 0)
             metadataValues["MetaDataSource"] = "WAV";
@@ -2159,14 +1905,15 @@ struct WaveAudioFormatTests final : public UnitTest
         {
             beginTest ("Metadata can be written and read");
 
-            const auto newMetadata = getMetadataAfterReading (format, writeToBlock (format, metadataValues));
+            const auto newMetadata = getMetadataAfterReading (format, writeToBlock (format, metadataArray));
             expect (newMetadata == metadataArray, "Somehow, the metadata is different!");
         }
 
         {
             beginTest ("Files containing a riff info source and an empty ISRC associate the source with the riffInfoSource key");
-            StringMap meta { { WavAudioFormat::riffInfoSource, "customsource" },
-                             { WavAudioFormat::internationalStandardRecordingCode, "" } };
+            StringPairArray meta;
+            meta.addMap ({ { WavAudioFormat::riffInfoSource, "customsource" },
+                           { WavAudioFormat::internationalStandardRecordingCode, "" } });
             const auto mb = writeToBlock (format, meta);
             checkPatternsPresent (mb, { "INFOISRC" });
             checkPatternsNotPresent (mb, { "ISRC:", "<ebucore" });
@@ -2178,7 +1925,8 @@ struct WaveAudioFormatTests final : public UnitTest
         {
             beginTest ("Files containing a riff info source and no ISRC associate the source with both keys "
                        "for backwards compatibility");
-            StringMap meta { { WavAudioFormat::riffInfoSource, "customsource" } };
+            StringPairArray meta;
+            meta.addMap ({ { WavAudioFormat::riffInfoSource, "customsource" } });
             const auto mb = writeToBlock (format, meta);
             checkPatternsPresent (mb, { "INFOISRC", "ISRC:customsource", "<ebucore" });
             const auto a = getMetadataAfterReading (format, mb);
@@ -2189,7 +1937,8 @@ struct WaveAudioFormatTests final : public UnitTest
         {
             beginTest ("Files containing an ISRC associate the value with the internationalStandardRecordingCode key "
                        "and the riffInfoSource key for backwards compatibility");
-            StringMap meta { { WavAudioFormat::internationalStandardRecordingCode, "AABBBCCDDDDD" } };
+            StringPairArray meta;
+            meta.addMap ({ { WavAudioFormat::internationalStandardRecordingCode, "AABBBCCDDDDD" } });
             const auto mb = writeToBlock (format, meta);
             checkPatternsPresent (mb, { "ISRC:AABBBCCDDDDD", "<ebucore" });
             checkPatternsNotPresent (mb, { "INFOISRC" });
@@ -2200,196 +1949,31 @@ struct WaveAudioFormatTests final : public UnitTest
 
         {
             beginTest ("Files containing an ISRC and a riff info source associate the values with the appropriate keys");
-            StringMap meta { { WavAudioFormat::riffInfoSource, "source" },
-                             { WavAudioFormat::internationalStandardRecordingCode, "UUVVVXXYYYYY" } };
+            StringPairArray meta;
+            meta.addMap ({ { WavAudioFormat::riffInfoSource, "source" } });
+            meta.addMap ({ { WavAudioFormat::internationalStandardRecordingCode, "UUVVVXXYYYYY" } });
             const auto mb = writeToBlock (format, meta);
             checkPatternsPresent (mb, { "INFOISRC", "ISRC:UUVVVXXYYYYY", "<ebucore" });
             const auto a = getMetadataAfterReading (format, mb);
             expect (a[WavAudioFormat::riffInfoSource] == "source");
             expect (a[WavAudioFormat::internationalStandardRecordingCode] == "UUVVVXXYYYYY");
         }
-
-        {
-            beginTest ("Files containing ASWG metadata read and write correctly");
-            MemoryBlock block;
-            StringMap meta;
-
-            for (const auto& key : WavFileHelpers::IXMLChunk::aswgMetadataKeys)
-                meta[key] = "Test123&<>";
-
-            {
-                const auto writerOptions = AudioFormatWriterOptions{}.withSampleRate (48000.0)
-                                                                     .withNumChannels (1)
-                                                                     .withBitsPerSample (32)
-                                                                     .withMetadataValues (meta);
-
-                std::unique_ptr<OutputStream> stream = std::make_unique<MemoryOutputStream> (block, false);
-                auto writer = format.createWriterFor (stream, writerOptions);
-                expect (writer != nullptr);
-            }
-
-            expect ([&]
-            {
-                auto input = std::make_unique<MemoryInputStream> (block, false);
-
-                while (! input->isExhausted())
-                {
-                    char chunkType[4] {};
-                    auto pos = input->getPosition();
-
-                    input->read (chunkType, 4);
-
-                    if (memcmp (chunkType, "iXML", 4) == 0)
-                    {
-                        auto length = (uint32) input->readInt();
-
-                        MemoryBlock xmlBlock;
-                        input->readIntoMemoryBlock (xmlBlock, (ssize_t) length);
-
-                        return parseXML (xmlBlock.toString()) != nullptr;
-                    }
-
-                    input->setPosition (pos + 1);
-                }
-
-                return false;
-            }());
-
-            {
-                auto reader = rawToUniquePtr (WavAudioFormat().createReaderFor (new MemoryInputStream (block, false), true));
-                expect (reader != nullptr);
-
-                for (const auto& [key, oldValue] : meta)
-                {
-                    const auto newValue = reader->metadataValues.getValue (key, "");
-                    expectEquals (oldValue, newValue);
-                }
-
-                expect (reader->metadataValues.getValue (WavAudioFormat::aswgVersion, "") == "3.01");
-            }
-        }
-
-        {
-            beginTest ("Writing 32-bit integer samples should work");
-
-            const auto minimum = std::numeric_limits<int>::min();
-            const auto maximum = std::numeric_limits<int>::max();
-
-            std::vector<int> dataIn { minimum,
-                                      minimum + 1,
-                                      minimum + 999,
-                                      0,
-                                      1,
-                                      maximum - 1001,
-                                      maximum - 1,
-                                      maximum };
-
-            const int* ptr = dataIn.data();
-
-            WavFormatWriterTestData integralTestData { &ptr,
-                                                       dataIn.size(),
-                                                       AudioFormatWriterOptions::SampleFormat::integral };
-
-            auto* reader = integralTestData.getReader();
-
-            if (reader == nullptr)
-            {
-                expect (false, "WavFormatReader should be non-null");
-                return;
-            }
-
-            std::vector<int> dataOut ((size_t) reader->lengthInSamples);
-            int* const outPtr = dataOut.data();
-            reader->read (&outPtr, 1, 0, (int) dataOut.size(), false);
-
-            expect (reader->usesFloatingPointData == false);
-            expect (dataIn == dataOut);
-        }
-
-        {
-            beginTest ("Writing 32-bit float samples should work");
-
-            std::vector<float> dataIn { -1.0f,
-                                        -0.8f,
-                                        0.0f,
-                                        0.8f,
-                                        1.0f };
-
-            const int* ptr = (int*) dataIn.data();
-
-            WavFormatWriterTestData floatingPointTestData { &ptr,
-                                                            dataIn.size(),
-                                                            AudioFormatWriterOptions::SampleFormat::floatingPoint };
-
-            auto* reader = floatingPointTestData.getReader();
-
-            if (reader == nullptr)
-            {
-                expect (false, "WavFormatReader should be non-null");
-                return;
-            }
-
-            std::vector<float> dataOut ((size_t) reader->lengthInSamples);
-            float* const outPtr = dataOut.data();
-            reader->read (&outPtr, 1, 0, (int) dataOut.size());
-
-            expect (reader->usesFloatingPointData == true);
-            expect (dataIn.size() == dataOut.size());
-
-            for (auto [index, value] : enumerate (dataOut, size_t{}))
-                expect (approximatelyEqual (value, dataIn[index]));
-        }
     }
 
 private:
-    struct WavFormatWriterTestData
-    {
-        WavFormatWriterTestData (const int** ptr,
-                                 size_t numSamples,
-                                 AudioFormatWriterOptions::SampleFormat sampleFormat)
-        {
-            const auto writerOptions = AudioFormatWriterOptions{}.withSampleRate (48000.0)
-                                                                 .withNumChannels (1)
-                                                                 .withBitsPerSample (32)
-                                                                 .withSampleFormat (sampleFormat);
-
-            WavAudioFormat format;
-
-            {
-                std::unique_ptr<OutputStream> stream = std::make_unique<MemoryOutputStream> (block, false);
-                auto writer = format.createWriterFor (stream, writerOptions);
-
-                writer->write (ptr, (int) numSamples);
-            }
-
-            reader = rawToUniquePtr (format.createReaderFor (new MemoryInputStream (block, false), true));
-        }
-
-        AudioFormatReader* getReader()
-        {
-            return reader.get();
-        }
-
-    private:
-        MemoryBlock block;
-        std::unique_ptr<AudioFormatReader> reader;
-    };
-
-    MemoryBlock writeToBlock (WavAudioFormat& format, const StringMap& meta)
+    MemoryBlock writeToBlock (WavAudioFormat& format, StringPairArray meta)
     {
         MemoryBlock mb;
 
         {
-            const auto writerOptions = AudioFormatWriterOptions{}.withSampleRate (44100.0)
-                                                                 .withNumChannels ((int) numTestAudioBufferChannels)
-                                                                 .withBitsPerSample (16)
-                                                                 .withMetadataValues (meta);
-
             // The destructor of the writer will modify the block, so make sure that we've
             // destroyed the writer before returning the block!
-            std::unique_ptr<OutputStream> stream = std::make_unique<MemoryOutputStream> (mb, false);
-            auto writer = format.createWriterFor (stream, writerOptions);
-
+            auto writer = rawToUniquePtr (format.createWriterFor (new MemoryOutputStream (mb, false),
+                                                                  44100.0,
+                                                                  numTestAudioBufferChannels,
+                                                                  16,
+                                                                  meta,
+                                                                  0));
             expect (writer != nullptr);
             AudioBuffer<float> buffer (numTestAudioBufferChannels, numTestAudioBufferSamples);
             expect (writer->writeFromAudioSampleBuffer (buffer, 0, numTestAudioBufferSamples));

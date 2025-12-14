@@ -1,22 +1,18 @@
 /*
   ==============================================================================
 
-   This file is part of the JUCE framework examples.
-   Copyright (c) Raw Material Software Limited
+   This file is part of the JUCE examples.
+   Copyright (c) 2020 - Raw Material Software Limited
 
    The code included in this file is provided under the terms of the ISC license
    http://www.isc.org/downloads/software-support-policy/isc-license. Permission
-   to use, copy, modify, and/or distribute this software for any purpose with or
+   To use, copy, modify, and/or distribute this software for any purpose with or
    without fee is hereby granted provided that the above copyright notice and
    this permission notice appear in all copies.
 
-   THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-   REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-   AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-   INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-   LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-   OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-   PERFORMANCE OF THIS SOFTWARE.
+   THE SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES,
+   WHETHER EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR
+   PURPOSE, ARE DISCLAIMED.
 
   ==============================================================================
 */
@@ -35,11 +31,10 @@
                    platforms.
 
  dependencies:     juce_core, juce_data_structures, juce_events, juce_graphics,
-                   juce_gui_basics, juce_gui_extra
- exporters:        xcode_mac, vs2022, vs2026, androidstudio, xcode_iphone
+                   juce_gui_basics
+ exporters:        xcode_mac, vs2019, androidstudio, xcode_iphone
 
  moduleFlags:      JUCE_STRICT_REFCOUNTEDPOINTER=1
-                   JUCE_PUSH_NOTIFICATIONS=1
 
  type:             Component
  mainClass:        AccessibilityDemo
@@ -62,7 +57,7 @@
     This component sets its accessibility title and help text properties and
     also acts as a focus container for its children.
 */
-class ContentComponent final : public Component
+class ContentComponent  : public Component
 {
 public:
     ContentComponent (const String& title, const String& info, Component& contentToDisplay)
@@ -101,8 +96,8 @@ public:
 
 private:
     //==============================================================================
-    struct InfoIcon final : public Component,
-                            public SettableTooltipClient
+    struct InfoIcon  : public Component,
+                       public SettableTooltipClient
     {
         InfoIcon()
         {
@@ -156,7 +151,7 @@ private:
     visible and controllable by accessibility clients. There are a few examples
     of some widgets in this demo such as Sliders, Buttons and a TreeView.
 */
-class JUCEWidgetsComponent final : public Component
+class JUCEWidgetsComponent  : public Component
 {
 public:
     JUCEWidgetsComponent()
@@ -189,7 +184,7 @@ public:
 
 private:
     //==============================================================================
-    class ButtonsComponent final : public Component
+    class ButtonsComponent  : public Component
     {
     public:
         ButtonsComponent()
@@ -200,13 +195,7 @@ private:
             addAndMakeVisible (textButton);
 
             shapeButton.setShape (getJUCELogoPath(), false, true, false);
-            shapeButton.onClick = [this]
-            {
-                auto options = MessageBoxOptions::makeOptionsOk (MessageBoxIconType::InfoIcon,
-                                                                 "Alert",
-                                                                 "This is an AlertWindow");
-                messageBox = AlertWindow::showScopedAsync (options, nullptr);
-            };
+            shapeButton.onClick = [] { AlertWindow::showMessageBoxAsync (MessageBoxIconType::InfoIcon, "Alert", "This is an AlertWindow"); };
             shapeButton.setHasFocusOutline (true);
             addAndMakeVisible (shapeButton);
         }
@@ -222,19 +211,20 @@ private:
 
     private:
         //==============================================================================
-        struct RadioButtonsGroupComponent final : public Component
+        struct RadioButtonsGroupComponent  : public Component
         {
             RadioButtonsGroupComponent()
             {
-                for (const auto [n, b] : enumerate (radioButtons, 1))
+                int index = 1;
+                for (auto& b : radioButtons)
                 {
                     b.setRadioGroupId (1);
-                    b.setButtonText ("Button " + String (n));
+                    b.setButtonText ("Button " + String (index++));
                     b.setHasFocusOutline (true);
                     addAndMakeVisible (b);
                 }
 
-                radioButtons[(size_t) Random::getSystemRandom().nextInt ((int) radioButtons.size())].setToggleState (true, dontSendNotification);
+                radioButtons[(size_t) Random::getSystemRandom().nextInt (numRadioButtons)].setToggleState (true, dontSendNotification);
 
                 setTitle ("Radio Buttons Group");
                 setFocusContainerType (FocusContainerType::focusContainer);
@@ -243,13 +233,14 @@ private:
             void resized() override
             {
                 auto bounds = getLocalBounds();
-                const auto height = bounds.getHeight() / (int) radioButtons.size();
+                const auto height = bounds.getHeight() / numRadioButtons;
 
                 for (auto& b : radioButtons)
                     b.setBounds (bounds.removeFromTop (height).reduced (2));
             }
 
-            std::array<ToggleButton, 3> radioButtons;
+            static constexpr int numRadioButtons = 3;
+            std::array<ToggleButton, numRadioButtons> radioButtons;
         };
 
         //==============================================================================
@@ -259,14 +250,13 @@ private:
                                   Colours::darkorange,
                                   Colours::darkorange.brighter (0.5f),
                                   Colours::darkorange.brighter (0.75f) };
-        ScopedMessageBox messageBox;
 
         //==============================================================================
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ButtonsComponent)
     };
 
     //==============================================================================
-    class SlidersComponent final : public Component
+    class SlidersComponent  : public Component
     {
     public:
         SlidersComponent()
@@ -320,7 +310,7 @@ private:
     };
 
     //==============================================================================
-    class TreeViewComponent final : public Component
+    class TreeViewComponent  : public Component
     {
     public:
         TreeViewComponent()
@@ -338,11 +328,11 @@ private:
 
     private:
         //==============================================================================
-        struct RootItem final : public TreeViewItem
+        struct RootItem  : public TreeViewItem
         {
             RootItem()
             {
-                struct Item final : public TreeViewItem
+                struct Item  : public TreeViewItem
                 {
                     Item (int index, int depth, int numSubItems)
                         : textToDisplay ("Item " + String (index)
@@ -450,7 +440,7 @@ constexpr NameAndRole accessibilityRoles[]
     Component::createAccessibilityHandler() method to return a custom AccessibilityHandler.
     The properties of this handler are set by the various controls in the demo.
 */
-class CustomWidgetComponent final : public Component
+class CustomWidgetComponent  : public Component
 {
 public:
     CustomWidgetComponent()
@@ -491,7 +481,7 @@ public:
 
 private:
     //==============================================================================
-    class AccessibleComponent final : public Component
+    class AccessibleComponent  : public Component
     {
     public:
         explicit AccessibleComponent (CustomWidgetComponent& owner)
@@ -514,7 +504,7 @@ private:
                 and accessibility clients. This derived class represents the properties
                 set via the demo UI.
             */
-            struct CustomAccessibilityHandler final : public AccessibilityHandler
+            struct CustomAccessibilityHandler  : public AccessibilityHandler
             {
                 explicit CustomAccessibilityHandler (CustomWidgetComponent& comp)
                     : AccessibilityHandler (comp.accessibleComponent,
@@ -546,7 +536,7 @@ private:
     };
 
     //==============================================================================
-    class InfoComponent final : public Component
+    class InfoComponent  : public Component
     {
     public:
         explicit InfoComponent (CustomWidgetComponent& owner)
@@ -639,7 +629,7 @@ private:
     };
 
     //==============================================================================
-    class ActionsComponent final : public Component
+    class ActionsComponent  : public Component
     {
     public:
         explicit ActionsComponent (CustomWidgetComponent& owner)
@@ -678,8 +668,8 @@ private:
 
     private:
         //==============================================================================
-        class AccessibilityActionComponent final : public Component,
-                                                   private Timer
+        class AccessibilityActionComponent  : public Component,
+                                              private Timer
         {
         public:
             AccessibilityActionComponent (CustomWidgetComponent& owner,
@@ -772,7 +762,7 @@ private:
     };
 
     //==============================================================================
-    class ValueInterfaceComponent final : public Component
+    class ValueInterfaceComponent  : public Component
     {
     public:
         explicit ValueInterfaceComponent (CustomWidgetComponent& owner)
@@ -824,7 +814,7 @@ private:
 
         std::unique_ptr<AccessibilityValueInterface> getValueInterface()
         {
-            struct Numeric final : public AccessibilityNumericValueInterface
+            struct Numeric  : public AccessibilityNumericValueInterface
             {
                 explicit Numeric (ValueInterfaceComponent& o)
                     : owner (o)
@@ -838,7 +828,7 @@ private:
                 ValueInterfaceComponent& owner;
             };
 
-            struct Ranged final : public AccessibilityRangedNumericValueInterface
+            struct Ranged  : public AccessibilityRangedNumericValueInterface
             {
                 explicit Ranged (ValueInterfaceComponent& o)
                     : owner (o)
@@ -860,7 +850,7 @@ private:
                 ValueInterfaceComponent& owner;
             };
 
-            struct Text final : public AccessibilityTextValueInterface
+            struct Text  : public AccessibilityTextValueInterface
             {
                 explicit Text (ValueInterfaceComponent& o)
                     : owner (o)
@@ -886,7 +876,7 @@ private:
 
     private:
         //==============================================================================
-        struct RangedValueComponent final : public Component
+        struct RangedValueComponent  : public Component
         {
             RangedValueComponent()
             {
@@ -989,7 +979,7 @@ private:
     };
 
     //==============================================================================
-    class StateComponent final : public Component
+    class StateComponent  : public Component
     {
     public:
         StateComponent()
@@ -1099,7 +1089,7 @@ private:
 /**
     The top-level component containing an example of custom child component navigation.
 */
-class CustomNavigationComponent final : public Component
+class CustomNavigationComponent  : public Component
 {
 public:
     CustomNavigationComponent()
@@ -1129,7 +1119,7 @@ public:
 
 private:
     //==============================================================================
-    class NavigableComponentsHolder final : public Component
+    class NavigableComponentsHolder  : public Component
     {
     public:
         NavigableComponentsHolder()
@@ -1166,7 +1156,7 @@ private:
 
         std::unique_ptr<ComponentTraverser> createFocusTraverser() override
         {
-            struct CustomTraverser final : public FocusTraverser
+            struct CustomTraverser  : public FocusTraverser
             {
                 explicit CustomTraverser (NavigableComponentsHolder& owner)
                     : navigableComponentsHolder (owner)  {}
@@ -1224,7 +1214,7 @@ private:
         }
 
     private:
-        struct NavigableComponent final : public Component
+        struct NavigableComponent  : public Component
         {
             NavigableComponent (int index, int total, NavigableComponentsHolder& owner)
             {
@@ -1357,172 +1347,86 @@ private:
 
 //==============================================================================
 /**
-    The top-level component containing an example of how to post system announcements
-    and notifications.
+    The top-level component containing an example of how to post system announcements.
 
     The AccessibilityHandler::postAnnouncement() method will post some text to the native
     screen reader application to be read out along with a priority determining how
     it should be read out (whether it should interrupt other announcements, etc.).
-
-    The AccessibilityHandler::postSystemNotification() method will post a system
-    notification to the OS via the push notification client on macOS, Android, and iOS
-    and the system tray component on Windows.
 */
-class AnnouncementsAndNotificationsComponent final : public Component
+class AnnouncementsComponent  : public Component
 {
 public:
-    AnnouncementsAndNotificationsComponent()
+    AnnouncementsComponent()
     {
-        setTitle ("Announcements and Notifications");
-        setDescription ("A demo of posting system announcements and notifications.");
-        setFocusContainerType (FocusContainerType::focusContainer);
-
         addAndMakeVisible (descriptionLabel);
 
-        addAndMakeVisible (announcements);
-        addAndMakeVisible (notifications);
+        textEntryBox.setMultiLine (true);
+        textEntryBox.setReturnKeyStartsNewLine (true);
+        textEntryBox.setText ("Announcement text.");
+        addAndMakeVisible (textEntryBox);
+
+        priorityComboBox.addItemList ({ "Priority - Low", "Priority - Medium", "Priority - High" }, 1);
+        priorityComboBox.setSelectedId (2);
+        addAndMakeVisible (priorityComboBox);
+
+        announceButton.onClick = [this]
+        {
+            auto priority = [this]
+            {
+                switch (priorityComboBox.getSelectedId())
+                {
+                    case 1:   return AccessibilityHandler::AnnouncementPriority::low;
+                    case 2:   return AccessibilityHandler::AnnouncementPriority::medium;
+                    case 3:   return AccessibilityHandler::AnnouncementPriority::high;
+                }
+
+                jassertfalse;
+                return AccessibilityHandler::AnnouncementPriority::medium;
+            }();
+
+            AccessibilityHandler::postAnnouncement (textEntryBox.getText(), priority);
+        };
+
+        addAndMakeVisible (announceButton);
+
+        setTitle ("Announcements");
+        setHelpText ("Type some text into the box and click the announce button to have it read out.");
+        setFocusContainerType (FocusContainerType::focusContainer);
     }
 
     void resized() override
     {
         Grid grid;
 
-        grid.templateRows = { Grid::TrackInfo (Grid::Fr (1)), Grid::TrackInfo (Grid::Fr (3)), Grid::TrackInfo (Grid::Fr (3)) };
-        grid.templateColumns = { Grid::TrackInfo (Grid::Fr (1)) };
+        grid.templateRows = { Grid::TrackInfo (Grid::Fr (3)),
+                              Grid::TrackInfo (Grid::Fr (1)),
+                              Grid::TrackInfo (Grid::Fr (1)),
+                              Grid::TrackInfo (Grid::Fr (1)),
+                              Grid::TrackInfo (Grid::Fr (1)),
+                              Grid::TrackInfo (Grid::Fr (1)) };
 
-        grid.items = { GridItem (descriptionLabel).withMargin ({ 2 }),
-                       GridItem (announcements).withMargin ({ 2 }),
-                       GridItem (notifications).withMargin ({ 2 }) };
+        grid.templateColumns = { Grid::TrackInfo (Grid::Fr (3)),
+                                 Grid::TrackInfo (Grid::Fr (2)) };
+
+        grid.items = { GridItem (descriptionLabel).withMargin (2).withColumn ({ GridItem::Span (2), {} }),
+                       GridItem (textEntryBox).withMargin (2).withArea ({ 2 }, { 1 }, { 5 }, { 2 }),
+                       GridItem (priorityComboBox).withMargin (2).withArea ({ 5 }, { 1 }, { 6 }, { 2 }),
+                       GridItem (announceButton).withMargin (2).withArea ({ 4 }, { 2 }, { 5 }, { 3 }) };
 
         grid.performLayout (getLocalBounds());
     }
 
 private:
-    struct AnnouncementsComponent  : public Component
-    {
-        AnnouncementsComponent()
-        {
-            textEntryBox.setMultiLine (true);
-            textEntryBox.setReturnKeyStartsNewLine (true);
-            textEntryBox.setText ("Announcement text.");
-            addAndMakeVisible (textEntryBox);
+    Label descriptionLabel { {}, "This is a demo of posting system announcements that will be read out by an accessibility client.\n\n"
+                                 "You can enter some text to be read out in the text box below, set a priority for the message and then "
+                                 "post it using the \"Announce\" button." };
 
-            priorityComboBox.addItemList ({ "Priority - Low", "Priority - Medium", "Priority - High" }, 1);
-            priorityComboBox.setSelectedId (2);
-            addAndMakeVisible (priorityComboBox);
-
-            announceButton.onClick = [this]
-            {
-                auto priority = [this]
-                {
-                    switch (priorityComboBox.getSelectedId())
-                    {
-                        case 1:   return AccessibilityHandler::AnnouncementPriority::low;
-                        case 2:   return AccessibilityHandler::AnnouncementPriority::medium;
-                        case 3:   return AccessibilityHandler::AnnouncementPriority::high;
-                    }
-
-                    jassertfalse;
-                    return AccessibilityHandler::AnnouncementPriority::medium;
-                }();
-
-                AccessibilityHandler::postAnnouncement (textEntryBox.getText(), priority);
-            };
-
-            addAndMakeVisible (announceButton);
-        }
-
-        void resized() override
-        {
-            Grid grid;
-
-            grid.templateRows = { Grid::TrackInfo (Grid::Fr (1)),
-                                  Grid::TrackInfo (Grid::Fr (1)),
-                                  Grid::TrackInfo (Grid::Fr (1)),
-                                  Grid::TrackInfo (Grid::Fr (1)),
-                                  Grid::TrackInfo (Grid::Fr (1)) };
-
-            grid.templateColumns = { Grid::TrackInfo (Grid::Fr (3)),
-                                     Grid::TrackInfo (Grid::Fr (2)) };
-
-            grid.items = { GridItem (textEntryBox).withMargin (2).withArea ({ 1 }, { 1 }, { 4 }, { 2 }),
-                           GridItem (priorityComboBox).withMargin (2).withArea ({ 4 }, { 1 }, { 5 }, { 2 }),
-                           GridItem (announceButton).withMargin (2).withArea ({ 3 }, { 2 }, { 4 }, { 3 }) };
-
-            grid.performLayout (getLocalBounds());
-        }
-
-        TextEditor textEntryBox;
-        ComboBox priorityComboBox;
-        TextButton announceButton { "Announce" };
-
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnnouncementsComponent)
-    };
-
-    struct NotificationsComponent  : public Component
-    {
-        NotificationsComponent()
-        {
-            titleBox.setText ("Notification title.");
-            addAndMakeVisible (titleBox);
-
-            descriptionBox.setMultiLine (true);
-            descriptionBox.setReturnKeyStartsNewLine (true);
-            descriptionBox.setText ("Notification body.");
-            addAndMakeVisible (descriptionBox);
-
-            postButton.onClick = [this]
-            {
-                AccessibilityHandler::postSystemNotification (titleBox.getText(),
-                                                              descriptionBox.getText());
-            };
-
-            addAndMakeVisible (postButton);
-        }
-
-        void resized() override
-        {
-            Grid grid;
-
-            grid.templateRows = { Grid::TrackInfo (Grid::Fr (1)),
-                                  Grid::TrackInfo (Grid::Fr (1)),
-                                  Grid::TrackInfo (Grid::Fr (1)),
-                                  Grid::TrackInfo (Grid::Fr (1)),
-                                  Grid::TrackInfo (Grid::Fr (1)) };
-
-            grid.templateColumns = { Grid::TrackInfo (Grid::Fr (3)),
-                                     Grid::TrackInfo (Grid::Fr (2)) };
-
-            grid.items = { GridItem (titleBox).withMargin (2).withArea ({ 1 }, { 1 }, { 2 }, { 2 }),
-                           GridItem (descriptionBox).withMargin (2).withArea ({ 2 }, { 1 }, { 5 }, { 2 }),
-                           GridItem (postButton).withMargin (2).withArea ({ 3 }, { 2 }, { 4 }, { 3 }) };
-
-            grid.performLayout (getLocalBounds());
-        }
-
-        TextEditor titleBox, descriptionBox;
-        TextButton postButton { "Post" };
-
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NotificationsComponent)
-    };
-
-    Label descriptionLabel { {}, "This is a demo of posting system announcements and notifications.\n\n"
-                                 "The \"Announcements\" section will post an announcement to be read out by the screen reader client.\n"
-                                 "The \"Notifications\" section will post a system notification to the OS.\n" };
-
-    AnnouncementsComponent announcementsComponent;
-    NotificationsComponent notificationsComponent;
-
-    ContentComponent announcements { "Announcements",
-                                     "Type some text into the box and click the announce button to have it read out.",
-                                     announcementsComponent };
-    ContentComponent notifications { "Notifications",
-                                     "Fill out the notification title and description fields and click the post button "
-                                     "to post it to the system.",
-                                     notificationsComponent };
+    TextEditor textEntryBox;
+    ComboBox priorityComboBox;
+    TextButton announceButton { "Announce" };
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnnouncementsAndNotificationsComponent)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnnouncementsComponent)
 };
 
 //==============================================================================
@@ -1531,7 +1435,7 @@ private:
 
     This just contains a TabbedComponent with a tab for each of the top-level demos.
 */
-class AccessibilityDemo final : public Component
+class AccessibilityDemo   : public Component
 {
 public:
     AccessibilityDemo()
@@ -1544,10 +1448,10 @@ public:
 
         const auto tabColour = getLookAndFeel().findColour (ResizableWindow::backgroundColourId).darker (0.1f);
 
-        tabs.addTab ("JUCE Widgets",                    tabColour, &juceWidgetsComponent,                   false);
-        tabs.addTab ("Custom Widget",                   tabColour, &customWidgetComponent,                  false);
-        tabs.addTab ("Custom Navigation",               tabColour, &customNavigationComponent,              false);
-        tabs.addTab ("Announcements and Notifications", tabColour, &announcementsAndNotificationsComponent, false);
+        tabs.addTab ("JUCE Widgets",      tabColour, &juceWidgetsComponent,      false);
+        tabs.addTab ("Custom Widget",     tabColour, &customWidgetComponent,     false);
+        tabs.addTab ("Custom Navigation", tabColour, &customNavigationComponent, false);
+        tabs.addTab ("Announcements",     tabColour, &announcementsComponent,    false);
         addAndMakeVisible (tabs);
 
         setSize (800, 600);
@@ -1571,7 +1475,7 @@ private:
     JUCEWidgetsComponent juceWidgetsComponent;
     CustomWidgetComponent customWidgetComponent;
     CustomNavigationComponent customNavigationComponent;
-    AnnouncementsAndNotificationsComponent announcementsAndNotificationsComponent;
+    AnnouncementsComponent announcementsComponent;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AccessibilityDemo)
